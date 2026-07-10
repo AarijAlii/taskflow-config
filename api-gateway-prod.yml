@@ -1,0 +1,16 @@
+# ============================================================
+# api-gateway-prod.yml - PRODUCTION overrides
+# ============================================================
+
+taskflow:
+  jwt:
+    secret: ${JWT_SECRET}
+    # NOT a value - a reference. At runtime the gateway resolves this from
+    # its own environment variables, which the deployment platform (ECS task
+    # definition / Kubernetes secret) injects from a secrets store.
+    # The actual secret never exists in ANY git repository.
+    # If JWT_SECRET isn't set in prod, startup fails loudly - correct behavior.
+
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO

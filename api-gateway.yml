@@ -1,0 +1,72 @@
+# ============================================================
+# api-gateway.yml - BASE config (all environments)
+# Served by Config Server; merged with api-gateway-{profile}.yml
+# (profile-specific values WIN on conflict).
+# ============================================================
+
+spring:
+  cloud:
+    gateway:
+      # --------------------------------------------------------
+      # ROUTES: the gateway's whole reason to exist.
+      # Each route = id (label) + uri (destination) + predicates (when
+      # it matches) + filters (transformations applied in transit).
+      #
+      # "lb://auth-service" means: ask Eureka for healthy instances
+      # registered under the name AUTH-SERVICE, pick one (round-robin),
+      # forward there. No IPs or ports anywhere - instances can move,
+      # scale, restart freely.
+      #
+      # Routes are evaluated in order; first matching predicate wins.
+      # --------------------------------------------------------
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/v1/auth/**
+          filters:
+            # StripPrefix=2 removes the first 2 path segments before
+            # forwarding: /api/v1/auth/login -> /auth/login
+            # Why? The public API is versioned (/api/v1/...) but services
+            # shouldn't care about gateway-level versioning - when we ship
+            # /api/v2 someday, services don't change, only routes do.
+            - StripPrefix=2
+
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - StripPrefix=2
+
+        - id: task-service
+          uri: lb://task-service
+          predicates:
+            - Path=/api/v1/tasks/**
+          filters:
+            - StripPrefix=2
+
+        # More routes are added here as each service comes online
+        # (projects, comments, search, ai, analytics...).
+        # Adding a route = git commit + gateway restart. No rebuild.
+
+      # --------------------------------------------------------
+      # Global HTTP client tuning: how long the gateway waits on
+      # downstream services before giving up. Without timeouts, one hung
+      # service would pile up waiting requests in the gateway until IT
+      # runs out of resources too - a cascading failure. Fail fast instead.
+      # --------------------------------------------------------
+      httpclient:
+        connect-timeout: 2000   # ms to establish TCP connection
+        response-timeout: 10s   # max wait for the downstream response
+
+taskflow:
+  jwt:
+    # NOTE: no secret here! The secret is environment-specific and secret -
+    # base files hold only non-sensitive, environment-agnostic values.
+    public-paths:
+      - /api/v1/auth/register
+      - /api/v1/auth/login
+      - /api/v1/auth/refresh
+      - /actuator/**
+      # Everything else on the gateway requires a valid Bearer token.

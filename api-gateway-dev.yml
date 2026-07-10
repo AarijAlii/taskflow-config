@@ -1,0 +1,28 @@
+# ============================================================
+# api-gateway-dev.yml - DEV-ONLY overrides (merged on top of api-gateway.yml
+# when the gateway runs with SPRING_PROFILES_ACTIVE=dev)
+# ============================================================
+
+taskflow:
+  jwt:
+    # A fixed, well-known secret for LOCAL DEVELOPMENT ONLY.
+    # auth-service (dev profile) signs with this same value, so locally
+    # minted tokens validate here.
+    #
+    # Why is committing this to git acceptable? Because this config-repo is
+    # local and the value guards nothing real - only your own laptop's fake
+    # users. The -prod variant of this file will NEVER contain the secret;
+    # it will reference an environment variable injected from a secrets
+    # store at deploy time.
+    #
+    # HS256 requires a key of at least 256 bits (32 bytes). This string is
+    # 64 chars = 512 bits - comfortably above the minimum. jjwt REJECTS
+    # shorter keys at startup (better than silently weak crypto).
+    secret: dev-only-secret-key-taskflow-0123456789abcdef0123456789abcdef
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    # In dev, log every routing decision (which route matched, which instance
+    # was chosen). Indispensable while wiring up new services; way too noisy
+    # for prod.
