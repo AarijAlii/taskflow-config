@@ -12,6 +12,11 @@ spring:
     # Dev-only superuser creds, worthless outside your laptop. Prod uses
     # ${DB_USERNAME}/${DB_PASSWORD} injected from a secrets store.
 
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    # kafka:19092 inside compose (internal listener), localhost:9092 bare-metal
+    # - the dual-listener setup from Chapter 5 paying off.
+
 taskflow:
   jwt:
     # MUST BE IDENTICAL to the gateway's dev secret (HS256 is symmetric:

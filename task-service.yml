@@ -1,0 +1,30 @@
+# task-service.yml - BASE config
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+  kafka:
+    producer:
+      # SERIALIZERS: Kafka stores bytes; these convert our objects.
+      # Key = the task UUID as a plain string (partition routing - Ch.10 §3).
+      # Value = the TaskEvent record as JSON via Spring's JsonSerializer.
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+      # acks=all: the broker leader waits for all in-sync replicas before
+      # confirming. With our single local broker it's equivalent to acks=1,
+      # but it's the correct PRODUCTION default (survives broker failover
+      # without losing acked events) - so we set it once, correctly, here.
+      acks: all
+
+      properties:
+        # Include the payload TYPE in a header? NO - consumers would then
+        # need our exact Java class on their classpath. We ship plain JSON;
+        # each consumer maps it onto ITS OWN record type (schema duplication
+        # decision - see TaskEvent javadoc + Chapter 10).
+        spring.json.add.type.headers: false

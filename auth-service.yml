@@ -21,6 +21,15 @@ spring:
   flyway:
     enabled: true   # runs pending migrations from classpath:db/migration at boot
 
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      properties:
+        spring.json.add.type.headers: false
+      # Full rationale for each setting: config-repo/task-service.yml
+
 taskflow:
   jwt:
     access-token-ttl: 15m

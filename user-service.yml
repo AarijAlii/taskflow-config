@@ -7,3 +7,26 @@ spring:
     open-in-view: false
   flyway:
     enabled: true
+
+  kafka:
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+      auto-offset-reset: earliest
+      # Where does a BRAND-NEW consumer group start reading?
+      #   latest (default) - only events published AFTER it first connects;
+      #                      everything already in the topic is invisible
+      #   earliest         - from the beginning of retained history
+      # earliest means: if user-service deploys AFTER auth published events,
+      # it still processes them. New consumers catching up on history is a
+      # log superpower (Ch.10 §1) - opt into it deliberately.
+
+      properties:
+        spring.json.trusted.packages: "com.taskflow.*"
+        # JsonDeserializer refuses to instantiate arbitrary classes from
+        # attacker-controlled JSON (deserialization gadget attacks) unless
+        # the target package is explicitly trusted.
+        spring.json.value.default.type: com.taskflow.userservice.events.UserEventsConsumer$UserRegisteredEvent
+        # Producer sends NO type headers (our choice) - so the consumer
+        # declares what type to map the JSON onto. $ = nested class syntax.

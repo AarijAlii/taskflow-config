@@ -1,0 +1,17 @@
+# task-service-dev.yml
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/task_db
+    username: taskflow
+    password: taskflow_local_dev
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    # THE DUAL-LISTENER LESSON APPLIED (Chapter 5): inside docker-compose,
+    # KAFKA_BOOTSTRAP=kafka:19092 (the INTERNAL listener). Bare-metal runs
+    # fall back to localhost:9092 (the HOST listener). Same config, both worlds.
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
