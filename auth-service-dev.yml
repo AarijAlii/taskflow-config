@@ -1,0 +1,25 @@
+# auth-service-dev.yml - DEV overrides
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/auth_db
+    # ${POSTGRES_HOST:localhost}: docker-compose injects POSTGRES_HOST=postgres
+    # (container DNS); bare-metal runs fall back to localhost. Same service,
+    # both worlds. auth_db = created by infra/postgres-init/01-*.sql -
+    # the database-per-service rule made physical.
+    username: taskflow
+    password: taskflow_local_dev
+    # Dev-only superuser creds, worthless outside your laptop. Prod uses
+    # ${DB_USERNAME}/${DB_PASSWORD} injected from a secrets store.
+
+taskflow:
+  jwt:
+    # MUST BE IDENTICAL to the gateway's dev secret (HS256 is symmetric:
+    # we sign, it verifies). Single source: this config-repo.
+    secret: dev-only-secret-key-taskflow-0123456789abcdef0123456789abcdef
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    # Dev superpower: log every SQL statement Hibernate emits. THE tool for
+    # spotting N+1 query bugs early. Too noisy for prod.

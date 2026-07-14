@@ -1,0 +1,29 @@
+# auth-service.yml - BASE config (all environments)
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      # THE critical JPA setting. Options and why they're wrong for us:
+      #   create/create-drop - wipes data. never.
+      #   update  - Hibernate mutates the schema itself: non-reviewable,
+      #             non-deterministic, can't drop/rename safely. Demo-ware.
+      #   none    - no check at all.
+      #   validate - Flyway owns the schema; Hibernate only VERIFIES its
+      #              entity mappings match reality at startup. Drift between
+      #              migrations and entities = boot failure, not runtime surprise.
+    open-in-view: false
+    # OSIV keeps a DB session open for the whole HTTP request "so views can
+    # lazy-load". We return DTOs, not entities - sessions should live exactly
+    # as long as the @Transactional method. Leaving OSIV on hides N+1 query
+    # bugs and holds connections hostage. Always off in services.
+
+  flyway:
+    enabled: true   # runs pending migrations from classpath:db/migration at boot
+
+taskflow:
+  jwt:
+    access-token-ttl: 15m
+    refresh-token-ttl: 7d
+    # Spring parses these into java.time.Duration. The classic trade-off:
+    # shorter access TTL = smaller leak window but more refresh traffic.
