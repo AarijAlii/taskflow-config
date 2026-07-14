@@ -56,6 +56,13 @@ spring:
           filters:
             - StripPrefix=2
 
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/api/v1/notifications/**
+          filters:
+            - StripPrefix=2
+
         # More routes are added here as each service comes online
         # (projects, comments, search, ai, analytics...).
         # Adding a route = git commit + gateway restart. No rebuild.

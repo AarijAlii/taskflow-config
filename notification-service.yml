@@ -1,0 +1,23 @@
+# notification-service.yml - BASE config
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+  kafka:
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      # earliest (Ch.10): when this consumer group first connects it processes
+      # the topic's retained HISTORY - tasks created before notification-service
+      # even existed still generate notifications. Demo of log-not-queue.
+      properties:
+        spring.json.trusted.packages: "com.taskflow.*"
+        spring.json.value.default.type: com.taskflow.notificationservice.events.TaskEventsConsumer$TaskEvent
+        # Producer sends no type headers (Ch.10 schema-duplication decision);
+        # we declare our local mirror type.
