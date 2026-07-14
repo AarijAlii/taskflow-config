@@ -39,6 +39,16 @@ spring:
           filters:
             - StripPrefix=2
 
+        - id: user-service-teams
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/teams/**
+          filters:
+            - StripPrefix=2
+          # Teams live in user-service too (same bounded context: users,
+          # profiles, teams, membership). Two public path prefixes, one
+          # service - routes are about API shape, not 1:1 service mapping.
+
         - id: task-service
           uri: lb://task-service
           predicates:

@@ -1,0 +1,11 @@
+# user-service-dev.yml
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/user_db
+    username: taskflow
+    password: taskflow_local_dev
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG

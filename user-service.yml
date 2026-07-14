@@ -1,0 +1,9 @@
+# user-service.yml - BASE config (rationale for each setting: Chapter 8 / auth-service.yml)
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
