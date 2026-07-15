@@ -1,0 +1,14 @@
+# analytics-service-dev.yml
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/analytics_db
+    username: taskflow
+    password: taskflow_local_dev
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG

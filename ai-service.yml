@@ -1,0 +1,8 @@
+# ai-service.yml - BASE config
+
+taskflow:
+  groq:
+    base-url: https://api.groq.com/openai/v1
+    model: llama-3.1-8b-instant
+    # Groq's free tier (no card): 30 req/min, 14.4k req/day - plenty for a
+    # demo feature. Key comes from the env (below), never from git.

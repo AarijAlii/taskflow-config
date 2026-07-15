@@ -89,6 +89,13 @@ spring:
           filters:
             - StripPrefix=2
 
+        - id: analytics-service
+          uri: lb://analytics-service
+          predicates:
+            - Path=/api/v1/analytics/**
+          filters:
+            - StripPrefix=2
+
         - id: notification-service
           uri: lb://notification-service
           predicates:

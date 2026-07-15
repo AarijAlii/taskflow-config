@@ -1,0 +1,27 @@
+# analytics-service.yml - BASE config
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 2000
+            read-timeout: 3000
+
+  kafka:
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      # earliest: analytics wants ALL history (contrast collab's latest - Ch.14)
+      properties:
+        spring.json.trusted.packages: "com.taskflow.*"
+        spring.json.value.default.type: com.taskflow.analyticsservice.events.TaskEventsRecorder$TaskEvent

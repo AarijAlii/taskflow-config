@@ -1,5 +1,15 @@
 # task-service.yml - BASE config
 
+grpc:
+  client:
+    ai-service:
+      address: discovery:///ai-service
+      # discovery:/// = resolve via Eureka; the gRPC port comes from the
+      # instance METADATA ai-service's devh starter publishes (Ch.16).
+      negotiation-type: plaintext
+      # No TLS inside the private network (same trust model as internal
+      # REST endpoints - the network boundary is the auth, Ch.12).
+
 spring:
   jpa:
     hibernate:

@@ -1,0 +1,6 @@
+# ai-service-prod.yml
+
+taskflow:
+  groq:
+    api-key: ${GROQ_API_KEY}
+    # No default in prod: missing key = loud startup failure (Chapter 3 rules).
