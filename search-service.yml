@@ -1,0 +1,24 @@
+# search-service.yml - BASE config
+# Note: no JPA/flyway - this service's only store is the OpenSearch projection.
+
+spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 2000
+            read-timeout: 3000
+
+  kafka:
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      # earliest = index the topic's HISTORY on first boot: tasks created
+      # before search-service existed become searchable. And the rebuild
+      # story (Ch.13): drop the index + reset this group's offsets = full
+      # reindex from the log.
+      properties:
+        spring.json.trusted.packages: "com.taskflow.*"
+        spring.json.value.default.type: com.taskflow.searchservice.events.TaskEventsIndexer$TaskEvent

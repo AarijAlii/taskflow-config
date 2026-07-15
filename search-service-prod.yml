@@ -1,0 +1,11 @@
+# search-service-prod.yml - env-var references only (Chapter 3 rules)
+
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+
+taskflow:
+  opensearch:
+    host: ${OPENSEARCH_HOST}
+    port: 443
+    # AWS OpenSearch Service: TLS + IAM auth wired in OpenSearchConfig then.

@@ -1,0 +1,10 @@
+# search-service-dev.yml
+
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+
+taskflow:
+  opensearch:
+    host: ${OPENSEARCH_HOST:localhost}
+    port: 9200

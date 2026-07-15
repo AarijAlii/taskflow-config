@@ -63,6 +63,13 @@ spring:
           filters:
             - StripPrefix=2
 
+        - id: search-service
+          uri: lb://search-service
+          predicates:
+            - Path=/api/v1/search/**
+          filters:
+            - StripPrefix=2
+
         - id: notification-service
           uri: lb://notification-service
           predicates:
