@@ -1,0 +1,20 @@
+# collab-service-dev.yml
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/collab_db
+    username: taskflow
+    password: taskflow_local_dev
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+
+taskflow:
+  jwt:
+    # Same dev secret as gateway/auth (HS-family is symmetric; this service
+    # VERIFIES at STOMP CONNECT - Ch.14).
+    secret: dev-only-secret-key-taskflow-0123456789abcdef0123456789abcdef
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG

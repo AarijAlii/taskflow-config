@@ -1,0 +1,31 @@
+# collab-service.yml - BASE config
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 2000
+            read-timeout: 3000
+
+  kafka:
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: latest
+      # LATEST here, not earliest (contrast Ch.11/13)! This consumer feeds
+      # LIVE sockets - replaying history would blast stale events at whoever
+      # happens to be connected at boot. History has no value for a
+      # real-time channel. Choosing the offset reset per consumer's PURPOSE
+      # is the lesson.
+      properties:
+        spring.json.trusted.packages: "com.taskflow.*"
+        spring.json.value.default.type: com.taskflow.collabservice.events.TaskEventsBridge$TaskEvent
