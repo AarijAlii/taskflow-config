@@ -8,6 +8,15 @@ spring:
   flyway:
     enabled: true
 
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 2000
+            read-timeout: 3000
+            # Fail-fast rationale: config-repo/project-service.yml
+
   kafka:
     producer:
       # SERIALIZERS: Kafka stores bytes; these convert our objects.

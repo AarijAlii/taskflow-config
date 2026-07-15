@@ -1,0 +1,22 @@
+# project-service.yml - BASE config
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            # FAIL FAST (Ch.12): a hung user-service must not hang US.
+            # 2s to establish TCP, 3s for the response - then a loud error
+            # instead of a silently-growing pile of blocked threads.
+            # (Circuit breakers - stop calling a failing dependency for a
+            # cooldown - are the next level; on the debt list.)
+            connect-timeout: 2000
+            read-timeout: 3000
