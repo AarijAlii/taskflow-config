@@ -2,7 +2,7 @@
 
 spring:
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/notification_db
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/notification_db
     username: taskflow
     password: taskflow_local_dev
 

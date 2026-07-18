@@ -2,7 +2,7 @@
 
 spring:
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/auth_db
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/auth_db
     # ${POSTGRES_HOST:localhost}: docker-compose injects POSTGRES_HOST=postgres
     # (container DNS); bare-metal runs fall back to localhost. Same service,
     # both worlds. auth_db = created by infra/postgres-init/01-*.sql -
