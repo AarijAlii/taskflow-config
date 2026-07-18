@@ -8,7 +8,7 @@ spring:
     # both worlds. auth_db = created by infra/postgres-init/01-*.sql -
     # the database-per-service rule made physical.
     username: taskflow
-    password: taskflow_local_dev
+    password: ${POSTGRES_PASSWORD:taskflow_local_dev}
     # Dev-only superuser creds, worthless outside your laptop. Prod uses
     # ${DB_USERNAME}/${DB_PASSWORD} injected from a secrets store.
 

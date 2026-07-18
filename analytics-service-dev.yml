@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/analytics_db
     username: taskflow
-    password: taskflow_local_dev
+    password: ${POSTGRES_PASSWORD:taskflow_local_dev}
 
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
